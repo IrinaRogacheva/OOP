@@ -10,34 +10,45 @@ if %MyProgram%=="" (
 )
 
 REM Copy empty file
-%MyProgram% Empty.txt "%TEMP%\output.txt" || goto err
+%MyProgram% Empty.txt "%TEMP%\output.txt" hello buy || goto err
 fc Empty.txt "%TEMP%\output.txt" > nul || goto err
 echo Test 1 passed
 
-REM Copy non-empty file
-%MyProgram% NonEmpty.txt "%TEMP%\output.txt" || goto err
-fc NonEmpty.txt "%TEMP%\output.txt" > nul || goto err
+REM Copy non-empty multi-line document with empty lines
+%MyProgram% NonEmpty.txt "%TEMP%\output.txt" hello buy || goto err
+fc NonEmptyOut.txt "%TEMP%\output.txt" > nul || goto err
 echo Test 2 passed
 
-REM Copy missing file should fail
-%MyProgram% MissingFile.txt "%TEMP%\output.txt" && goto err
+REM Checking for looping
+%MyProgram% LoopingCheck.txt "%TEMP%\output.txt" ma mama || goto err
+fc LoopingCheckOut.txt "%TEMP%\output.txt" > nul || goto err
 echo Test 3 passed
 
-REM If output file is not specified, program must fail
-%MyProgram% MissingFile.txt && goto err
+REM Checking the situation with the return in case of an unsuccessful search
+%MyProgram% ReturnSearchCheck.txt "%TEMP%\output.txt" 1231234 888 || goto err
+fc ReturnSearchCheckOut.txt "%TEMP%\output.txt" > nul || goto err
 echo Test 4 passed
 
-REM If input and output files are not specified, program must fail
-%MyProgram% && goto err
+REM Replace empty string
+%MyProgram% NonEmpty.txt "%TEMP%\output.txt" "" "buy" || goto err
+fc NonEmpty.txt "%TEMP%\output.txt" > nul || goto err
 echo Test 5 passed
 
-REM If the number of arguments is greater than 4, program must fail
-%MyProgram% NonEmpty.txt "%TEMP%\output.txt" SomeArgument && goto err
+REM Copy missing file should fail
+%MyProgram% MissingFile.txt "%TEMP%\output.txt" hello buy && goto err
 echo Test 6 passed
 
-REM If no access to the output file, program must fail
-%MyProgram% NonEmpty.txt "d:\output.txt" && goto err
+REM If count of arguments is less than 5, program must fail
+%MyProgram% MissingFile.txt hello buy && goto err
 echo Test 7 passed
+
+REM If the number of arguments is greater than 4, program must fail
+%MyProgram% NonEmpty.txt "%TEMP%\output.txt" hello buy SomeArgument && goto err
+echo Test 8 passed
+
+REM If no access to the output file, program must fail
+%MyProgram% NonEmpty.txt "d:\output.txt" hello buy && goto err
+echo Test 9 passed
 
 REM Тесты прошли успешно
 echo All tests passed successfully

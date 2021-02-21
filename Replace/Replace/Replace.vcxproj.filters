@@ -28,5 +28,10 @@
     <Text Include="Empty.txt" />
     <Text Include="NonEmpty.txt" />
     <Text Include="input.txt" />
+    <Text Include="NonEmptyOut.txt" />
+    <Text Include="LoopingCheck.txt" />
+    <Text Include="LoopingCheckOut.txt" />
+    <Text Include="ReturnSearchCheck.txt" />
+    <Text Include="ReturnSearchCheckOut.txt" />
   </ItemGroup>
 </Project>

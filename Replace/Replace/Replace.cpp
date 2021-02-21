@@ -29,17 +29,19 @@ std::optional<Args> ParseArgs(int argc, char* argv[])
 
 void ReplaceSubstring(std::ifstream& input, std::optional<Args>& args, std::ofstream& output)
 {
-	while (input)
+	std::string str;
+	while (getline(input, str))
 	{
-		std::string str;
-		std::getline(input, str);
-		int pos = str.find(args->searchString);
-		while (pos != -1)
+		if (args->searchString != "")
 		{
-			str.replace(pos, args->searchString.length(), args->replaceString);
-			pos = str.find(args->searchString, pos + args->replaceString.length());
+			int pos = str.find(args->searchString);
+			while (pos != -1)
+			{
+				str.replace(pos, args->searchString.length(), args->replaceString);
+				pos = str.find(args->searchString, pos + args->replaceString.length());
+			}
 		}
-		output << str + "\n";
+		output << str << "\n";
 	}
 }
 
