@@ -27,16 +27,19 @@ std::optional<Args> ParseArgs(int argc, char* argv[])
 	return args;
 }
 
-void CopyStreams(std::ifstream& input, std::ofstream& output)
+void ReplaceSubstring(std::ifstream& input, std::optional<Args>& args, std::ofstream& output)
 {
-	//Копируем содержимое входного файла в выходной
-	char ch;
-	while (input.get(ch))
+	while (input)
 	{
-		if (!output.put(ch))
+		std::string str;
+		std::getline(input, str);
+		int pos = str.find(args->searchString);
+		while (pos != -1)
 		{
-			break;
+			str.replace(pos, args->searchString.length(), args->replaceString);
+			pos = str.find(args->searchString, pos + args->replaceString.length());
 		}
+		output << str + "\n";
 	}
 }
 
@@ -67,7 +70,7 @@ int main(int argc, char* argv[])
 		return 1;
 	}
 
-	CopyStreams(input, output);
+	ReplaceSubstring(input, args, output);
 
 	if (input.bad())
 	{

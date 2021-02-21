@@ -27,5 +27,6 @@
   <ItemGroup>
     <Text Include="Empty.txt" />
     <Text Include="NonEmpty.txt" />
+    <Text Include="input.txt" />
   </ItemGroup>
 </Project>
