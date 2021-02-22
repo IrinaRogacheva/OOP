@@ -29,6 +29,7 @@ std::optional<Args> ParseArgs(int argc, char* argv[])
 
 void ReplaceSubstring(std::ifstream& input, std::optional<Args>& args, std::ofstream& output)
 {
+	//Поиск и замена подстроки во входном файле с записью в выходной
 	std::string str;
 	while (getline(input, str))
 	{
