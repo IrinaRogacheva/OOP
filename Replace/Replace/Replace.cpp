@@ -27,19 +27,23 @@ std::optional<Args> ParseArgs(int argc, char* argv[])
 	return args;
 }
 
-void ReplaceSubstring(std::ifstream& input, std::optional<Args>& args, std::ofstream& output)
+void ReplaceSubstring(std::istream& input, std::ostream& output, const std::string& searchString, const std::string& replaceString)
 {
 	//Поиск и замена подстроки во входном файле с записью в выходной
 	std::string str;
 	while (getline(input, str))
 	{
-		if (args->searchString != "")
+		if (searchString != "")
 		{
-			int pos = str.find(args->searchString);
+			std::string tempString;
+			int pos = str.find(searchString);
 			while (pos != -1)
 			{
-				str.replace(pos, args->searchString.length(), args->replaceString);
-				pos = str.find(args->searchString, pos + args->replaceString.length());
+				tempString.append(str, 0, pos).append(replaceString).append(str, pos + searchString.size(), str.size());
+				str.clear();
+				str.append(tempString);
+				pos = str.find(searchString, pos + replaceString.size());
+				tempString.clear();
 			}
 		}
 		output << str << "\n";
@@ -73,7 +77,7 @@ int main(int argc, char* argv[])
 		return 1;
 	}
 
-	ReplaceSubstring(input, args, output);
+	ReplaceSubstring(input, output, args->searchString, args->replaceString);
 
 	if (input.bad())
 	{
