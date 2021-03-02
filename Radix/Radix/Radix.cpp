@@ -2,6 +2,7 @@
 #include <iostream>
 #include <optional>
 #include <string>
+#include "Radix.h"
 
 int CheckRadix(const std::string& str, bool& wasError)
 {
@@ -18,7 +19,7 @@ int CheckRadix(const std::string& str, bool& wasError)
 		}
 	}
 	int radix = std::stoi(checkedString);
-	if (radix < 2 || radix > 32)
+	if (radix < 2 || radix > 36)
 	{
 		wasError = true;
 	}
@@ -32,7 +33,7 @@ struct Args
 	std::string value;
 };
 
-std::optional<Args> ParseArgs(int argc, char* argv[], bool& wasError)
+std::optional<Args> ParseArgs(int argc, char* argv[])
 {
 	if (argc != 4)
 	{
@@ -41,8 +42,15 @@ std::optional<Args> ParseArgs(int argc, char* argv[], bool& wasError)
 		return std::nullopt;
 	}
 	Args args;
+	bool wasError = false;
 	args.sourceNotation = CheckRadix(argv[1], wasError);
 	args.destinationNotation = CheckRadix(argv[2], wasError);
+	if (wasError)
+	{
+		std::cout << "Invalid radix argument\n";
+		std::cout << "Radix must be a number from 2 to 32\n";
+		return std::nullopt;
+	}
 	args.value = argv[3];
 	return args;
 }
@@ -62,33 +70,45 @@ std::string fillKeyString()
 	return str;
 }
 
-int StringToInt(const std::string& str, const std::string& keyStr, int radix, bool& wasError)
+struct Error
+{
+	bool wasError;
+	std::string message;
+};
+
+int StringToInt(const std::string& str, const std::string& keyStr, int radix, Error& err)
 {
 	int result = 0;
 	bool overflow = false;
-	int count = str.size() - 1;
+	int degree = str.size() - 1;
+	double copyDegree = degree;
+	double inverseDegree;
 	for (char ch : str)
 	{
-		if (keyStr.find(ch) != -1)
+		if (keyStr.find(ch) != -1 && keyStr.find(ch) <= radix)
 		{
-			if (--count != 0)
+			int dif = INT_MAX - result;
+			if (degree != 0)
 			{
-				overflow = pow((INT_MAX - result) / keyStr.find(ch), 1/count) <= radix;
+				copyDegree = (double)degree;
+				inverseDegree = 1 / copyDegree;
+				overflow = pow((INT_MAX - result) / keyStr.find(ch), inverseDegree) <= radix;
 			}
 			if (!overflow)
 			{
-				result += keyStr.find(ch) * pow(radix, count);
+				result += keyStr.find(ch) * pow(radix, degree);
+				degree--;
 			}
 			else
 			{
-				wasError = true;
-				std::cout << "Error" << "\n";
+				err.wasError = true;
+				err.message = "Overflow\n" "Too large argument <value>";	
 			}
 		}
 		else
 		{
-			wasError = true;
-			std::cout << "Error 1" << "\n";
+			err.wasError = true;
+			err.message = "Invalid value argument\n" "Value can not contain characters that do not belong to radix " + radix;	
 		}
 	}
 	return result;
@@ -110,13 +130,7 @@ std::string IntToString(int n, const std::string& keyStr, int radix, bool& wasEr
 int main(int argc, char* argv[])
 {
 	bool wasError = false;
-	auto args = ParseArgs(argc, argv, wasError);
-	if (wasError)
-	{
-		std::cout << "Invalid radix argument\n";
-		std::cout << "Radix must be a number from 2 to 32\n";
-		return 1;
-	}
+	auto args = ParseArgs(argc, argv);
 	//Проверка правильности аргументов командной строки
 	if (!args)
 	{
@@ -125,15 +139,18 @@ int main(int argc, char* argv[])
 
 	std::string keyString = fillKeyString();
 
-	int decInt = StringToInt(args->value, keyString, args->sourceNotation, wasError);
-	if (wasError)
+	Error err;
+	int decInt = StringToInt(args->value, keyString, args->sourceNotation, err);
+	if (err.wasError)
 	{
-		std::cout << "Invalid value argument\n";
-		std::cout << "Value can not contain characters that do not belong to radix " << args->sourceNotation << "\n";
+		std::cout << err.message << "\n";
 		return 1;
 	}
-
-	std::cout << IntToString(decInt, keyString, args->destinationNotation, wasError);
+	std::cout << decInt << "\n";
+	if (args->destinationNotation != 10)
+	{
+		std::cout << IntToString(decInt, keyString, args->destinationNotation, wasError);
+	}
 
 	return 0;
 }

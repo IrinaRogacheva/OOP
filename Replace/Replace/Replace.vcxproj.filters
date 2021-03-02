@@ -34,4 +34,9 @@
     <Text Include="ReturnSearchCheck.txt" />
     <Text Include="ReturnSearchCheckOut.txt" />
   </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Replace.h">
+      <Filter>Файлы заголовков</Filter>
+    </ClInclude>
+  </ItemGroup>
 </Project>

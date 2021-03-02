@@ -2,6 +2,7 @@
 #include <iostream>
 #include <optional>
 #include <string>
+#include "Replace.h"
 
 struct Args
 {
@@ -27,25 +28,32 @@ std::optional<Args> ParseArgs(int argc, char* argv[])
 	return args;
 }
 
-void ReplaceSubstring(std::istream& input, std::ostream& output, const std::string& searchString, const std::string& replaceString)
+std::string ReplaceSubstring(std::string& str, const std::string& searchString, const std::string& replaceString)
+{
+	int pos = 0;
+	std::string resultString;
+	if (searchString != "")
+	{
+		int nextPos = str.find(searchString);
+		while (nextPos != -1)
+		{
+			resultString.append(str, pos, nextPos - pos).append(replaceString);
+			pos = nextPos + searchString.size();
+			nextPos = str.find(searchString, pos);
+		}
+	}
+	resultString.append(str, pos);
+	return resultString;
+}
+
+void CopyReplacedString(std::istream& input, std::ostream& output, const std::string& searchString, const std::string& replaceString)
 {
 	//Поиск и замена подстроки во входном файле с записью в выходной
 	std::string str;
+	std::string resultString = str;
 	while (getline(input, str))
 	{
-		if (searchString != "")
-		{
-			std::string tempString;
-			int pos = str.find(searchString);
-			while (pos != -1)
-			{
-				tempString.append(str, 0, pos).append(replaceString).append(str, pos + searchString.size(), str.size());
-				str.clear();
-				str.append(tempString);
-				pos = str.find(searchString, pos + replaceString.size());
-				tempString.clear();
-			}
-		}
+		str = ReplaceSubstring(str, searchString, replaceString);
 		output << str << "\n";
 	}
 }
@@ -77,7 +85,7 @@ int main(int argc, char* argv[])
 		return 1;
 	}
 
-	ReplaceSubstring(input, output, args->searchString, args->replaceString);
+	CopyReplacedString(input, output, args->searchString, args->replaceString);
 
 	if (input.bad())
 	{

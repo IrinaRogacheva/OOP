@@ -170,6 +170,9 @@
     <Text Include="ReturnSearchCheck.txt" />
     <Text Include="ReturnSearchCheckOut.txt" />
   </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Replace.h" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
