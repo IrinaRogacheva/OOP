@@ -28,14 +28,14 @@ std::optional<Args> ParseArgs(int argc, char* argv[])
 	return args;
 }
 
-std::string ReplaceSubstring(std::string& str, const std::string& searchString, const std::string& replaceString)
+std::string ReplaceSubstring(const std::string& str, const std::string& searchString, const std::string& replaceString)
 {
-	int pos = 0;
+	size_t pos = 0;
 	std::string resultString;
 	if (searchString != "")
 	{
-		int nextPos = str.find(searchString);
-		while (nextPos != -1)
+		size_t nextPos = str.find(searchString);
+		while (nextPos != std::string::npos)
 		{
 			resultString.append(str, pos, nextPos - pos).append(replaceString);
 			pos = nextPos + searchString.size();
