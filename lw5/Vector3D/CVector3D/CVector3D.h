@@ -30,6 +30,6 @@ std::istream& operator>>(std::istream& input, CVector3D& vector);
 
 std::ostream& operator<<(std::ostream& output, const CVector3D& vector);
 
-double DotProd(CVector3D const& v1, CVector3D const& v2);
+double DotProduct(CVector3D const& v1, CVector3D const& v2);
 
 CVector3D CrossProduct(CVector3D const& v1, CVector3D const& v2);

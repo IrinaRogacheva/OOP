@@ -91,10 +91,9 @@ void CVector3D::Normalize()
 	double vLength = GetLength();
 	if (vLength > 0)
 	{
-		double invertedLength = 1 / vLength;
-		x *= invertedLength;
-		y *= invertedLength;
-		z *= invertedLength;
+		x /= vLength;
+		y /= vLength;
+		z /= vLength;
 	}
 }
 
@@ -118,12 +117,12 @@ CVector3D const operator*(double scalar, CVector3D const& vector)
 	return vector * scalar;
 }
 
-double DotProd(CVector3D const& v1, CVector3D const& v2)
+double DotProduct(CVector3D const& v1, CVector3D const& v2)
 {
 	return v1.x * v2.x + v1.y * v2.y + v1.z * v2.z;
 }
 
 CVector3D CrossProduct(CVector3D const& v1, CVector3D const& v2)
 {
-	return CVector3D(v1.y * v2.z - v1.z * v2.y, v1.z * v2.x - v1.x * v2.z, v1.x * v2.y - v1.y * v2.x);
+	return { v1.y * v2.z - v1.z * v2.y, v1.z * v2.x - v1.x * v2.z, v1.x * v2.y - v1.y * v2.x };
 }
