@@ -122,10 +122,17 @@ SCENARIO("Try to switch to the reverse gear and back")
 				}
 				WHEN("Switch to the neutral gear")
 				{
-					REQUIRE(car.SetGear(0) == true);
-					THEN("The speed of the car is zero")
+					THEN("It is impossible to switch to forward gear")
 					{
-						REQUIRE(car.GetSpeed() == 0);
+						REQUIRE_THROWS_AS(car.SetGear(1), std::logic_error);
+					}
+					AND_WHEN("Stop the car")
+					{
+						car.SetSpeed(0);
+						THEN("It is possible to switch to forward gear")
+						{
+							REQUIRE(car.SetGear(1) == true);
+						}
 					}
 				}
 			}

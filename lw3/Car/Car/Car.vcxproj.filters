@@ -32,9 +32,6 @@
     <ClInclude Include="CCarControl.h">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
-    <ClInclude Include="const.h">
-      <Filter>Файлы заголовков</Filter>
-    </ClInclude>
     <ClInclude Include="Direction.h">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>

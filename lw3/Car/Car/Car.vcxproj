@@ -146,7 +146,6 @@
   <ItemGroup>
     <ClInclude Include="CCar.h" />
     <ClInclude Include="CCarControl.h" />
-    <ClInclude Include="const.h" />
     <ClInclude Include="Direction.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

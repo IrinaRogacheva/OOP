@@ -62,7 +62,7 @@ bool CCarControl::SetGear(std::istream& args)
 {
 	int gear;
 	args >> gear;
-	if (args.fail() || gear < MIN_GEAR || gear > MAX_GEAR)
+	if (args.fail() || gear < CCar::MIN_GEAR || gear > CCar::MAX_GEAR)
 	{
 		m_output << "Invalid argument. The gear must be an integer from -1 to 5\n";
 		return false;
@@ -108,7 +108,6 @@ bool CCarControl::Info(std::istream& /*args*/) const
 	string directionString = m_car.GetDirection() == Direction::STAND 
 		? "stand" 
 		: (m_car.GetDirection() == Direction::FORWARD ? "forward" : "backward");
-	m_output << "Car info:\n";
 	m_output << "Engine: " << (m_car.IsTurnedOn() ? "is turned on" : "is turned off") << endl;
 	m_output << "Direction: " << directionString << endl;
 	m_output << "Speed: " << m_car.GetSpeed() << endl;

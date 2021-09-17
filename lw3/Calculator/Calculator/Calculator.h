@@ -21,7 +21,7 @@ public:
 	Calculator();
 	void DeclareVariable(const string& varName);
 	void SetVariable(const string& varName, const string& varValue);
-	void DeclareFunction(const string& fnName, const string& fnValue);
+	void DeclareFunction(const string& fnName, const string fnValue);
 
 	const std::map<std::string, double>& GetVars() const;
 	const std::map<std::string, double>& GetFns() const;

@@ -1,5 +1,6 @@
 #include "CCar.h"
 #include <stdexcept>
+#include <iostream>
 
 CCar::CCar()
 	: m_speed(0)
@@ -59,7 +60,7 @@ bool CCar::SetSpeed(int speed)
 		throw std::logic_error("It is impossible to increase the speed in neutral gear");
 		return false;
 	}
-	if (speed >= RANGE[m_gear + 1][0] && speed <= RANGE[m_gear + 1][1])
+	if (speed >= CCar::RANGE[m_gear + 1][0] && speed <= RANGE[m_gear + 1][1])
 	{
 		m_speed = speed;
 		if (m_gear == -1)
@@ -83,17 +84,18 @@ bool CCar::SetGear(int gear)
 		throw std::logic_error("You can only switch to reverse gear at zero speed");
 		return false;
 	}
-	if (m_gear == -1 && gear == 1 && m_speed != 0)
+	if (gear != 0 && m_gear == -1 && m_speed != 0)
 	{
-		throw std::logic_error("You can switch from reverse gear to first gear only at zero speed ");
+		throw std::logic_error("You can switch from reverse gear only at zero speed");
+		return false;
+	}
+	if (gear != -1 && m_gear == 0 && m_speed < 0)
+	{
+		throw std::logic_error("After switching from reverse to neutral gear at a non-zero speed, you can only switch to forward gear after stopping");
 		return false;
 	}
 	if (abs(m_speed) >= RANGE[gear + 1][0] && abs(m_speed) <= RANGE[gear + 1][1])
 	{
-		if (m_gear == -1 && gear == 0 && m_speed != 0)
-		{
-			m_speed = 0;
-		}
 		m_gear = gear;
 		return true;
 	}

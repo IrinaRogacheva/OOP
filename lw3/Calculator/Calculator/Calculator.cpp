@@ -36,7 +36,7 @@ void Calculator::DeclareVariable(const string& varName)
 	m_vars[varName] = numeric_limits<double>::quiet_NaN();
 }
 
-void Calculator::SetVariable(const string& varName, const std::string& varValue)
+void Calculator::SetVariable(const string& varName, const string& varValue)
 {
 	if (IsFnDeclared(varName))
 	{
@@ -83,7 +83,7 @@ void Calculator::SetVariable(const string& varName, const std::string& varValue)
 	}
 }
 
-void Calculator::DeclareFunction(const string& fnName, const string& fnValue)
+void Calculator::DeclareFunction(const string& fnName, const string fnValue)
 {
 	if (IsVarDeclared(fnName) || IsFnDeclared(fnName))
 	{
@@ -149,7 +149,7 @@ void Calculator::CheckForDependencies(const string dependencyName)
 	}
 }
 
-void Calculator::CalculateFunction(string fnName)
+void Calculator::CalculateFunction(const string fnName)
 {
 	Function function = m_fns[fnName];
 	if (function.operation)

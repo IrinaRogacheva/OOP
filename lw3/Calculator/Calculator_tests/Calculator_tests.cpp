@@ -3,6 +3,8 @@
 #include "../Calculator/Calculator.h"
 #include "../Calculator/CommandControl.h"
 
+#include <chrono>
+
 using namespace std;
 
 TEST_CASE("Initialization of a list of valid commands in the CommandControl class")
@@ -521,6 +523,90 @@ TEST_CASE("The Fibonacci sequence calculation")
 
 				REQUIRE(output.str() == "fib0:1.00\nfib1:1.00\nfib2:2.00\nfib3:3.00\nfib4:5.00\nfib5:8.00\nfib6:13.00\n");
 			}
+		}
+	}
+}
+
+TEST_CASE("An attempt to calculate the value of the 50th number of the Fibonacci sequence")
+{
+	GIVEN("Calculator class, menu, and list of commands")
+	{
+		Calculator calculator;
+		stringstream input, output;
+		CommandControl commandControl(calculator, input, output);
+		vector<string> commandLine{ "let v0=0",
+			"let v1=1",
+			"fn fib0=v0",
+			"fn fib1=v1" };
+
+		string command;
+		for (size_t i = 2; i <= 25; i++)
+		{
+			command = "fn fib" + std::to_string(i) + "=fib" + std::to_string(i - 1) + "+fib" + std::to_string(i - 2);
+			commandLine.push_back(command);
+		}
+
+		WHEN("Stepwise calculation of the Fibonacci sequence")
+		{
+			for (size_t i = 0; i < commandLine.size(); ++i)
+			{
+				input << commandLine[i];
+				commandControl.HandleCommand();
+				input.clear();
+			}
+
+			chrono::steady_clock sc;
+			input << "let v0=1";
+			auto start = sc.now();
+			commandControl.HandleCommand();
+			auto end = sc.now();
+
+			auto time_span = static_cast<chrono::duration<double>>(end - start);
+			input.clear();
+			output << time_span.count() << " seconds !!!";
+
+				REQUIRE(output.str() == "fib0:0.00\n");
+		}
+	}
+}
+
+TEST_CASE("calculating very large sequences of functions")
+{
+	GIVEN("Calculator class, menu, and list of commands")
+	{
+		Calculator calculator;
+		stringstream input, output;
+		CommandControl commandControl(calculator, input, output);
+		vector<string> commandLine{ "let x=1",
+			"fn x2=x+x" };
+
+		string command;
+		for (size_t i = 3; i <= 1000000; i++)
+		{
+			command = "fn x" + std::to_string(i) + "=x" + std::to_string(i - 1) + "+x";
+			commandLine.push_back(command);
+		}
+
+		WHEN("Stepwise calculation of the Fibonacci sequence")
+		{
+			for (size_t i = 0; i < commandLine.size(); ++i)
+			{
+				input << commandLine[i];
+				commandControl.HandleCommand();
+				input.clear();
+			}
+
+			chrono::steady_clock sc;
+			input << "let x=2";
+			auto start = sc.now();
+			commandControl.HandleCommand();
+			auto end = sc.now();
+
+			auto time_span = static_cast<chrono::duration<double>>(end - start);
+			input.clear();
+			output << time_span.count() << " seconds !!!";
+
+			REQUIRE(output.str() == "fib0:0.00\n");
 		}
 	}
 }
