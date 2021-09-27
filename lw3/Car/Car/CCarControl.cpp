@@ -46,15 +46,15 @@ bool CCarControl::TurnEngineOn(std::istream& /*args*/)
 
 bool CCarControl::TurnEngineOff(std::istream& /*args*/)
 {
-	if (m_car.TurnOffEngine())
+	try
 	{
+		m_car.TurnOffEngine();
 		m_output << "Engine is turned off\n";
 	}
-	else
+	catch (std::exception& e)
 	{
-		m_output << "To turn off the engine, there must be a neutral gear, and speed = 0\n";
+		m_output << e.what() << std::endl;
 	}
-
 	return true;
 }
 
@@ -62,21 +62,19 @@ bool CCarControl::SetGear(std::istream& args)
 {
 	int gear;
 	args >> gear;
-	if (args.fail() || gear < CCar::MIN_GEAR || gear > CCar::MAX_GEAR)
+	if (args.fail())
 	{
 		m_output << "Invalid argument. The gear must be an integer from -1 to 5\n";
-		return false;
+		return true;
 	}
 	try
 	{
 		m_car.SetGear(gear);
 		m_output << "The gear was switched successfully\n";
-		return true;
 	}
 	catch (std::exception& e)
 	{
 		m_output << e.what() << std::endl;
-		return false;
 	}
 	return true;
 }
@@ -85,22 +83,21 @@ bool CCarControl::SetSpeed(std::istream& args)
 {
 	int speed;
 	args >> speed;
-	if (args.fail() || speed < 0)
+	if (args.fail())
 	{
 		m_output << "Incorrect input. The speed must be an integer more than zero\n";
-		return false;
+		return true;
 	}
 	try
 	{
 		m_car.SetSpeed(speed);
 		m_output << "Speed was changed successfully\n";
-		return true;
 	}
 	catch(std::exception &e)
 	{
 		m_output << e.what() << std::endl;
-		return false;
 	}
+	return true;
 } 
 
 bool CCarControl::Info(std::istream& /*args*/) const

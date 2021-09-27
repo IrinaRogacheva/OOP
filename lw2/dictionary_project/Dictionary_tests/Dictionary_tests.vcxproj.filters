@@ -15,15 +15,21 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Dictionary.cpp" />
-    <ClCompile Include="MiniDictionary.cpp" />
+    <ClCompile Include="Dictionary_tests.cpp">
+      <Filter>Исходные файлы</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Dictionary\Dictionary.cpp">
+      <Filter>Исходные файлы</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Dictionary.h">
+    <ClInclude Include="..\Dictionary\Dictionary.h">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <Text Include="Dictionary.txt" />
+    <Text Include="empty.txt" />
+    <Text Include="non_empty.txt" />
+    <Text Include="output.txt" />
   </ItemGroup>
 </Project>
